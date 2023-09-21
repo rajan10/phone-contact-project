@@ -1,4 +1,4 @@
-from contact_list_controller import add_record, search_record
+from contact_list_controller import controller
 
 
 def menu_display():
@@ -8,13 +8,14 @@ def menu_display():
         print("2. Search Contact By Name")
         print("3. Exit")
         choice = input("Enter your choice: ")
+
         if choice == "1":
-            print("you chose 1")
-            add_record()
+            controller.add_record()
         elif choice == "2":
-            print("you chose 2")
-            name_search = input("enter Name to search")
-            search_record(name_search)
-        else:
-            print("Invalid Choice. Please choose 1 and 2.")
+            name = input("Enter name to search: ")
+            controller.search_record(name)
+        elif choice == "3":
+            print("Exiting the Contact List. Goodbye!")
             break
+        else:
+            print("Invalid Choice. Please choose 1, 2, or 3.")

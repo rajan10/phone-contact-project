@@ -7,59 +7,61 @@ class Contact:
         self.phone = phone
 
 
-class ContactList:
-    def __init__(self):
+class ContactList:  # object will be initialize with file name 'phone_list.json' and in dict format
+    def __init__(self, file="phone_list.json"):
         self.contacts = []
+        self.file = file
+        self.load_contacts()
 
-        # load the json when object is created
-
-    def add_contact(self, contact: object) -> None:
-        self.contacts.append(contact)
-
-    def save_contact(self, file_name: str) -> None:
-        with open(file_name, "w") as file:
-            json.dump([vars(contact) for contact in self.contacts], file)
-
-    def load_contacts(self, file_path: str) -> None:
+    def load_contacts(self):
         try:
-            with open(file_path, "r") as file:
+            with open(self.file, "r") as file:
                 data = json.load(file)
                 self.contacts = [
                     Contact(**contact_data) for contact_data in data
-                ]  # [Contact(name="Hari",phone=123),]
+                ]  # into dict
         except FileNotFoundError:
             self.contacts = []
 
-    def search_contact(self, name: str) -> object:
+    def save_contacts(self):
+        with open(self.file, "w") as file:
+            json.dump([vars(contact) for contact in self.contacts], file)
+
+    def add_contact(self, name, phone):
+        contact = Contact(name, phone)
+        self.contacts.append(contact)  # appends in json format with keys and values
+        self.save_contacts()  # will save in dictionary format
+
+    def search_contact(self, name):
         for contact in self.contacts:
             if contact.name == name:
                 return contact
-
-
-contacts = ContactList()
+        return None
 
 
 def take_inputs() -> tuple:
     name = input("Enter name: ")
     phone = input("Enter phone: ")
-    return name, phone  # returns tuple
+    return name, phone
 
 
-def add_record() -> None:
-    user_inputs = take_inputs()
-    name, phone = user_inputs
+class ContactController:
+    def __init__(self, contact_list):
+        self.contact_list = contact_list
 
-    contact = Contact(name, phone)  # create an instance of Contact
-    contacts.add_contact(contact)
-    contacts.save_contact("phone_list.json")
-    print("Recored added & saved Successfully!")
+    def add_record(self):
+        user_inputs = take_inputs()
+        name, phone = user_inputs
+        self.contact_list.add_contact(name, phone)
+        print("Record added & saved Successfully!")
+
+    def search_record(self, name):
+        result_contact = self.contact_list.search_contact(name)
+        if result_contact:
+            print(f"Name: {result_contact.name}, Phone: {result_contact.phone}")
+        else:
+            print("Contact not found.")
 
 
-def search_record(name) -> None:
-    contacts.load_contacts("phone_list.json")
-
-    result_object = contacts.search_contact(name)
-    if result_object:
-        print(f"Name: {result_object.name}, Phone: {result_object.phone}")
-    else:
-        print("Contact not found.")
+contacts = ContactList()
+controller = ContactController(contacts)
