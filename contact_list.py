@@ -8,7 +8,6 @@ def menu_display():
         print("2. Search Contact By Name")
         print("3. Exit")
         choice = input("Enter your choice: ")
-
         if choice == "1":
             print("you chose 1")
             add_record()
@@ -17,5 +16,5 @@ def menu_display():
             name_search = input("enter Name to search")
             search_record(name_search)
         else:
-            print("Invalid Choice. Please choose 1,2,3 and r or quit.")
+            print("Invalid Choice. Please choose 1 and 2.")
             break
